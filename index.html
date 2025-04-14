@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Job Portal</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Smooth scrolling behavior */
+    html {
+      scroll-behavior: smooth;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">JobConnect</div>
+    <div class="nav-buttons">
+        <button onclick="openForm('loginForm')">Login</button>
+        <button onclick="openForm('signupForm')">Sign Up</button>
+    </div>
+  </nav>
+
+  <main class="hero">
+    <h1 class="fade-in">Find Your Dream Job</h1>
+    <p class="fade-in delay">Search from thousands of job listings across top companies</p>
+    <div class="search-bar fade-in delay-2">
+      <input type="text" placeholder="Search jobs, roles, keywords..."/>
+      <select>
+        <option>All Locations</option>
+        <option>Kochi</option>
+        <option>Chennai</option>
+        <option>Bangalore</option>
+        <option>Hyderabad</option>
+        <option>Delhi</option>
+      </select>
+      <button>Search</button>
+    </div>
+  </main>
+  
+  <section class="job-cards">
+    <!-- Job Cards with clickable anchor -->
+    <div class="job-card fade-in delay-3" onclick="scrollToSignupForm()">
+      <h3>Software Tester</h3>
+      <p>Location: Kochi</p>
+      <p>Company: TestCorp</p>
+    </div>
+  
+    <div class="job-card fade-in delay-4" onclick="scrollToSignupForm()">
+      <h3>Support Analyst</h3>
+      <p>Location: Bangalore</p>
+      <p>Company: CloudBridge</p>
+    </div>
+  
+    <div class="job-card fade-in delay-5" onclick="scrollToSignupForm()">
+      <h3>IT Intern</h3>
+      <p>Location: Chennai</p>
+      <p>Company: NetSoft</p>
+    </div>
+  </section>
+
+  <!-- Popup Forms -->
+  <div class="popup-form" id="loginForm">
+    <h3>Login</h3>
+    <input type="email" id="loginEmail" placeholder="Email ID" required />
+    <input type="password" id="loginPassword" placeholder="Password"/>
+    <div class="captcha-container">
+      <span id="loginCaptchaCode"></span>
+      <input type="text" id="loginCaptchaInput" placeholder="Enter CAPTCHA" />
+    </div>
+    <button onclick="submitLogin()">Login</button>
+    <p id="loginMsg"></p>
+    <span onclick="closeForm('loginForm')">✖</span>
+    <p style="text-align: center; margin-top: 10px;">
+      Don't have an account? <a href="javascript:void(0);" onclick="openForm('signupForm')">Sign up here</a>
+    </p>
+  </div>
+
+  <div class="popup-form" id="signupForm">
+    <h3>Sign Up</h3>
+    <input type="text" id="signupName" placeholder="Full Name" required />
+    <input type="email" id="signupEmail" placeholder="Email ID" required />
+    <input type="password" id="signupPassword" placeholder="Password" required />
+    <div class="captcha-container">
+      <span id="signupCaptchaCode" class="captcha-code"></span>
+      <input type="text" id="signupCaptchaInput" placeholder="Enter CAPTCHA" />
+    </div>
+    <button onclick="submitSignup()">Sign Up</button>
+    <p id="signupMsg"></p>
+    <span onclick="closeForm('signupForm')">✖</span>
+    <p style="text-align: center; margin-top: 10px;">
+      Already have an account? <a "javascript:void(0);" onclick="closeForm('signupForm'); openForm('loginForm')">Login here</a>
+    </p>
+  </div>
+
+  <script>
+    // Open and close forms
+    function openForm(formId) {
+      document.getElementById(formId).style.display = "flex";
+      if (formId === 'loginForm') generateCaptcha('loginCaptchaCode');
+      if (formId === 'signupForm') generateCaptcha('signupCaptchaCode');
+    }
+
+    function closeForm(formId) {
+      document.getElementById(formId).style.display = "none";
+    }
+
+    // Scroll to Signup Form
+    function scrollToSignupForm() {
+      const signupForm = document.getElementById('signupForm');
+      signupForm.scrollIntoView({ behavior: 'smooth' });
+      openForm('signupForm');
+    }
+
+    // Login and Sign up logic
+    function submitLogin() {
+      const email = document.getElementById('loginEmail').value;
+      const entered = document.getElementById('loginCaptchaInput').value;
+      const actual = document.getElementById('loginCaptchaCode').textContent;
+      const msg = document.getElementById('loginMsg');
+  
+      if (!email) {
+        msg.textContent = "Please enter your email.";
+      } else if (entered !== actual) {
+        msg.textContent = "Invalid CAPTCHA.";
+        generateCaptcha('loginCaptchaCode');
+      } else {
+        msg.textContent = `Welcome back, ${email.split('@')[0]}!`;
+      }
+    }
+
+    function submitSignup() {
+      const name = document.getElementById('signupName').value;
+      const email = document.getElementById('signupEmail').value;
+      const entered = document.getElementById('signupCaptchaInput').value;
+      const actual = document.getElementById('signupCaptchaCode').textContent;
+      const msg = document.getElementById('signupMsg');
+  
+      if (!name || !email) {
+        msg.textContent = "Please fill all fields.";
+      } else if (entered !== actual) {
+        msg.textContent = "Invalid CAPTCHA.";
+        generateCaptcha('signupCaptchaCode');
+      } else {
+        msg.textContent = `Thanks for signing up, ${name}!`;
+      }
+    }
+
+    function generateCaptcha(id) {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      let code = '';
+      for (let i = 0; i < 5; i++) {
+        code += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      document.getElementById(id).textContent = code;
+    }
+  </script>
+</body>
+</html>
